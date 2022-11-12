@@ -23,8 +23,8 @@
 #include "addons/RTDBHelper.h"
 
 // Insert your network credentials
-#define WIFI_SSID "WhiteSky-Marshall"
-#define WIFI_PASSWORD "x7jy8n9p"
+#define WIFI_SSID "Kaitlin's iPhone"
+#define WIFI_PASSWORD "af5rx3a0fj8en"
 
 #define USER_EMAIL "testemail@gmail.com"
 #define USER_PASSWORD "MySUPERCoolPassword1"
@@ -50,12 +50,19 @@ bool signupOK = false;
 int currentScore = 0;
 int newScore = 0;
 
+int currentIndex = 13;
+
 const char* carissaStuff = "our_house/Joe/reps/";
+const char* joesCount = "our_house/Joe/numberOfReps";
 
 void setup(){
   pinMode(25, INPUT);
 
   Serial.begin(115200);
+
+  Serial.print("MAC ADDRESS: ");
+  Serial.println(WiFi.macAddress());
+
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
   while (WiFi.status() != WL_CONNECTED){
@@ -65,6 +72,7 @@ void setup(){
   Serial.println();
   Serial.print("Connected with IP: ");
   Serial.println(WiFi.localIP());
+
   Serial.println();
 
   /* Assign the api key (required) */
@@ -135,7 +143,11 @@ void loop(){
       carissaLoud.set("id", 99);
       carissaLoud.set("points", -7);
 
-      int randomValue = random(10, 99);
+      int randomValue = currentIndex;
+
+      while(randomValue == 0) {
+        asm("nop");
+      }
 
       Serial.write("randomValue = ");
       printf("%d \n", randomValue);
@@ -162,7 +174,9 @@ void loop(){
 
       newScore = currentScore - 7;
 
-      //Firebase.RTDB.setIntAsync(&fbdo, "our_house/Carissa/score", newScore);
+      Firebase.RTDB.setInt(&fbdo, joesCount, randomValue+1);
+
+      currentIndex++;
     }
   }
 }
